@@ -2,7 +2,7 @@ from s3 import put_data_to_s3
 from datetime import datetime as dt
 from dotenv import load_dotenv
 from model import get_latest_log, insert_crawler_log
-from datetime import timezone
+from datetime import timezone, timedelta
 import requests
 import json
 import os
@@ -18,12 +18,13 @@ SQL_TABLE = os.getenv('WHEATHER_TABLE')
 def request_data(url):
     respone = requests.get(url)
     data = respone.json()
-    updated_time = dt.fromisoformat(data['cwbopendata']['location'][0]['time']['obsTime'][:-6]).astimezone(timezone.utc).strftime('%Y-%m-%d %H:%M:%S')
+    updated_time = dt.fromisoformat(data['cwbopendata']['location'][0]['time']['obsTime'][:-6]).strftime('%Y-%m-%d %H:%M:%S')
     return data, updated_time
 
 
 def datetime():
-    now = dt.now()
+    tz = timezone(timedelta(hours=+8))
+    now = dt.now(tz)
     dt_string = now.strftime("%Y%m%d_%H:%M")
     return dt_string
 

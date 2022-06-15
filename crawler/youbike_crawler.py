@@ -1,5 +1,6 @@
 from s3 import put_data_to_s3
 from datetime import datetime as dt
+from datetime import timezone, timedelta
 from dotenv import load_dotenv
 from model import get_latest_log, insert_crawler_log
 import requests
@@ -22,7 +23,8 @@ def request_data(url):
 
 
 def datetime():
-    now = dt.now()
+    tz = timezone(timedelta(hours=+8))
+    now = dt.now(tz)
     dt_string = now.strftime("%Y%m%d_%H:%M")
     return dt_string
 
