@@ -46,7 +46,6 @@ if __name__ == '__main__':
         path = "wheather_data/"
         filename = f"{ datetime() }_wheather.json"
         aws_respone = insert_data_to_s3(S3_BUCKET, path + filename, data)
-        print(aws_respone)
         end_time = time.time()
         insert_crawler_log(SQL_TABLE, (filename, updated_time, len(data), (end_time - start_time), 1, json.dumps(aws_respone)))
 
