@@ -38,8 +38,13 @@ def insert_data_to_s3(bucket, filename, data):
 
 
 if __name__ == '__main__':
-
+    date_time = datetime()
+    start = time.time()
     data, updated_time, size = request_data(WHEATHER_URL)
+    end = time.time()
+    responseTime = end - start
+
+    start = time.time()
     latest_log = get_latest_log(SQL_TABLE) # get latest log from mysql
 
     datetime_request = dt.strptime(updated_time, '%Y-%m-%d %H:%M:%S')
@@ -48,14 +53,16 @@ if __name__ == '__main__':
     if datetime_request > datetime_log:
         start_time = time.time()
         path = "wheather_data/"
-        filename = f"{ datetime() }_wheather.json"
+        filename = f"{ date_time }_wheather.json"
         aws_respone = insert_data_to_s3(S3_BUCKET, path + filename, data)
-        end_time = time.time()
-        insert_crawler_log(SQL_TABLE, (filename, updated_time, len(data['cwbopendata']['location']), size, (end_time - start_time), 1, json.dumps(aws_respone)))
+        end = time.time()
+        executionTime = end - start
+        insert_crawler_log(SQL_TABLE, (filename, updated_time, len(data['cwbopendata']['location']), size, responseTime, executionTime, 1, json.dumps(aws_respone)))
 
     else:
-        start_time = time.time()
+
         path = "wheather_data/"
-        filename = f"{ datetime() }_wheather.json"
-        end_time = time.time()
-        insert_crawler_log(SQL_TABLE, (filename, updated_time, len(data['cwbopendata']['location']), size, (end_time - start_time), 0, None))
+        filename = f"{ date_time }_wheather.json"
+        end = time.time()
+        executionTime = end - start
+        insert_crawler_log(SQL_TABLE, (filename, updated_time, len(data['cwbopendata']['location']), size, responseTime, executionTime, 0, None))
