@@ -47,11 +47,11 @@ if __name__ == '__main__':
         filename = f"{ datetime() }_wheather.json"
         aws_respone = insert_data_to_s3(S3_BUCKET, path + filename, data)
         end_time = time.time()
-        insert_crawler_log(SQL_TABLE, (filename, updated_time, len(data), (end_time - start_time), 1, json.dumps(aws_respone)))
+        insert_crawler_log(SQL_TABLE, (filename, updated_time, len(data['cwbopendata']['location']), (end_time - start_time), 1, json.dumps(aws_respone)))
 
     else:
         start_time = time.time()
         path = "wheather_data/"
         filename = f"{ datetime() }_wheather.json"
         end_time = time.time()
-        insert_crawler_log(SQL_TABLE, (filename, updated_time, len(data), (end_time - start_time), 0, None))
+        insert_crawler_log(SQL_TABLE, (filename, updated_time, len(data['cwbopendata']['location']), (end_time - start_time), 0, None))
