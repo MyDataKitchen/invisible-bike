@@ -27,7 +27,7 @@ def get_latest_log(sql_table):
 
 def insert_crawler_log(sql_table, params):
     db.ping(reconnect=True)
-    query = f"INSERT INTO { sql_table } (filename, updateTime, dataLength, executionTime, insertStatus, awsRespone) VALUES (%s, %s, %s, %s, %s, %s)"
+    query = f"INSERT INTO { sql_table } (filename, updateTime, dataLength, dataSize(kb), executionTime, insertStatus, awsRespone) VALUES (%s, %s, %s, %s, %s, %s, %s)"
     cursor = db.cursor()
     cursor.execute(query, params)
     db.commit()
