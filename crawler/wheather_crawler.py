@@ -7,6 +7,7 @@ import requests
 import json
 import os
 import time
+import sys
 
 load_dotenv()
 
@@ -19,7 +20,9 @@ def request_data(url):
     respone = requests.get(url)
     data = respone.json()
     updated_time = dt.fromisoformat(data['cwbopendata']['location'][0]['time']['obsTime'][:-6]).strftime('%Y-%m-%d %H:%M:%S')
-    return data, updated_time
+    size = sys.getsizeof(json.dumps(data))
+    size = round(size / 1024, 0)
+    return data, updated_time, size
 
 
 def datetime():
@@ -36,7 +39,7 @@ def insert_data_to_s3(bucket, filename, data):
 
 if __name__ == '__main__':
 
-    data, updated_time = request_data(WHEATHER_URL)
+    data, updated_time, size = request_data(WHEATHER_URL)
     latest_log = get_latest_log(SQL_TABLE) # get latest log from mysql
 
     datetime_request = dt.strptime(updated_time, '%Y-%m-%d %H:%M:%S')
@@ -48,11 +51,11 @@ if __name__ == '__main__':
         filename = f"{ datetime() }_wheather.json"
         aws_respone = insert_data_to_s3(S3_BUCKET, path + filename, data)
         end_time = time.time()
-        insert_crawler_log(SQL_TABLE, (filename, updated_time, len(data['cwbopendata']['location']), (end_time - start_time), 1, json.dumps(aws_respone)))
+        insert_crawler_log(SQL_TABLE, (filename, updated_time, len(data['cwbopendata']['location']), size, (end_time - start_time), 1, json.dumps(aws_respone)))
 
     else:
         start_time = time.time()
         path = "wheather_data/"
         filename = f"{ datetime() }_wheather.json"
         end_time = time.time()
-        insert_crawler_log(SQL_TABLE, (filename, updated_time, len(data['cwbopendata']['location']), (end_time - start_time), 0, None))
+        insert_crawler_log(SQL_TABLE, (filename, updated_time, len(data['cwbopendata']['location']), size, (end_time - start_time), 0, None))
