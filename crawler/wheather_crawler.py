@@ -51,7 +51,6 @@ if __name__ == '__main__':
     datetime_log = latest_log[0]['updateTime']
 
     if datetime_request > datetime_log:
-        start_time = time.time()
         path = "wheather_data/"
         filename = f"{ date_time }_wheather.json"
         aws_respone = insert_data_to_s3(S3_BUCKET, path + filename, data)
@@ -60,7 +59,6 @@ if __name__ == '__main__':
         insert_crawler_log(SQL_TABLE, (filename, updated_time, len(data['cwbopendata']['location']), size, responseTime, executionTime, 1, json.dumps(aws_respone)))
 
     else:
-
         path = "wheather_data/"
         filename = f"{ date_time }_wheather.json"
         end = time.time()
