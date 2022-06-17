@@ -14,6 +14,8 @@ load_dotenv()
 YOUBIKE_URL = os.getenv('YOUBIKE_URL')
 S3_BUCKET = os.getenv('BUCKET')
 SQL_TABLE = os.getenv('YOUBIKE_TABLE')
+S3_DIRECTORY_PATH = os.getenv('YOUBIKE_DIRECTORY_PATH')
+FILE_NAME = os.getenv('YOUBIKE_FILE_NAME')
 
 
 def request_data(url):
@@ -51,16 +53,14 @@ if __name__ == '__main__':
     datetime_log = latest_log[0]['updateTime']
 
     if datetime_request > datetime_log:
-        path = "ubike_data/"
-        filename = f"{ date_time }_youbike.json"
-        aws_respone = insert_data_to_s3(S3_BUCKET, path + filename, data)
+        filename = f"{ date_time }_{ FILE_NAME }.json"
+        aws_response = insert_data_to_s3(S3_BUCKET, S3_DIRECTORY_PATH + filename, data)
         end = time.time()
         execution_time = end - start
-        insert_crawler_log(SQL_TABLE, (filename, updated_time, len(data), size, response_time, execution_time, 1, json.dumps(aws_respone)))
+        insert_crawler_log(SQL_TABLE, (filename, updated_time, len(data), size, response_time, execution_time, 1, json.dumps(aws_response)))
 
     else:
-        path = "ubike_data/"
-        filename = f"{ date_time }_youbike.json"
+        filename = f"{ date_time }_{ FILE_NAME }.json"
         end = time.time()
-        executionTime = end - start
+        execution_time = end - start
         insert_crawler_log(SQL_TABLE, (filename, updated_time, len(data), size, response_time, execution_time, 0, None))

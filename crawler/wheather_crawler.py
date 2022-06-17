@@ -14,7 +14,8 @@ load_dotenv()
 WHEATHER_URL = os.getenv('WHEATHER_URL')
 S3_BUCKET = os.getenv('BUCKET')
 SQL_TABLE = os.getenv('WHEATHER_TABLE')
-
+S3_DIRECTORY_PATH = os.getenv('WHEATHER_DIRECTORY_PATH')
+FILE_NAME = os.getenv('WHEATHER_FILE_NAME')
 
 def request_data(url):
     respone = requests.get(url)
@@ -51,16 +52,14 @@ if __name__ == '__main__':
     datetime_log = latest_log[0]['updateTime']
 
     if datetime_request > datetime_log:
-        path = "wheather_data/"
-        filename = f"{ date_time }_wheather.json"
-        aws_respone = insert_data_to_s3(S3_BUCKET, path + filename, data)
+        filename = f"{ date_time }_{ FILE_NAME }.json"
+        aws_response = insert_data_to_s3(S3_BUCKET, S3_DIRECTORY_PATH + filename, data)
         end = time.time()
         execution_time = end - start
-        insert_crawler_log(SQL_TABLE, (filename, updated_time, len(data['records']['location']), size, response_time, execution_time, 1, json.dumps(aws_respone)))
+        insert_crawler_log(SQL_TABLE, (filename, updated_time, len(data['records']['location']), size, response_time, execution_time, 1, json.dumps(aws_response)))
 
     else:
-        path = "wheather_data/"
-        filename = f"{ date_time }_wheather.json"
+        filename = f"{ date_time }_{ FILE_NAME }.json"
         end = time.time()
         execution_time = end - start
         insert_crawler_log(SQL_TABLE, (filename, updated_time, len(data['records']['location']), size, response_time, execution_time, 0, None))
