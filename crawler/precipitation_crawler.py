@@ -11,9 +11,9 @@ import sys
 
 load_dotenv()
 
-WHEATHER_URL = os.getenv('WHEATHER_URL')
+WHEATHER_URL = os.getenv('PRECIPITATION_URL')
 S3_BUCKET = os.getenv('BUCKET')
-SQL_TABLE = os.getenv('WHEATHER_TABLE')
+SQL_TABLE = os.getenv('PRECIPITATION_TABLE')
 
 
 def request_data(url):
@@ -51,16 +51,16 @@ if __name__ == '__main__':
     datetime_log = latest_log[0]['updateTime']
 
     if datetime_request > datetime_log:
-        path = "wheather_data/"
-        filename = f"{ date_time }_wheather.json"
+        path = "precipitation_data/"
+        filename = f"{ date_time }_precipitation.json"
         aws_respone = insert_data_to_s3(S3_BUCKET, path + filename, data)
         end = time.time()
         executionTime = end - start
         insert_crawler_log(SQL_TABLE, (filename, updated_time, len(data['cwbopendata']['location']), size, responseTime, executionTime, 1, json.dumps(aws_respone)))
 
     else:
-        path = "wheather_data/"
-        filename = f"{ date_time }_wheather.json"
+        path = "precipitation_data/"
+        filename = f"{ date_time }_precipitation.json"
         end = time.time()
         executionTime = end - start
         insert_crawler_log(SQL_TABLE, (filename, updated_time, len(data['cwbopendata']['location']), size, responseTime, executionTime, 0, None))
