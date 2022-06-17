@@ -42,7 +42,7 @@ if __name__ == '__main__':
     start = time.time()
     data, updated_time, size = request_data(YOUBIKE_URL)
     end = time.time()
-    responseTime = end - start
+    response_time = end - start
 
     start = time.time()
     latest_log = get_latest_log(SQL_TABLE) # get latest log from mysql
@@ -55,12 +55,12 @@ if __name__ == '__main__':
         filename = f"{ date_time }_youbike.json"
         aws_respone = insert_data_to_s3(S3_BUCKET, path + filename, data)
         end = time.time()
-        executionTime = end - start
-        insert_crawler_log(SQL_TABLE, (filename, updated_time, len(data), size, responseTime, executionTime, 1, json.dumps(aws_respone)))
+        execution_time = end - start
+        insert_crawler_log(SQL_TABLE, (filename, updated_time, len(data), size, response_time, execution_time, 1, json.dumps(aws_respone)))
 
     else:
         path = "ubike_data/"
         filename = f"{ date_time }_youbike.json"
         end = time.time()
         executionTime = end - start
-        insert_crawler_log(SQL_TABLE, (filename, updated_time, len(data), size, responseTime, executionTime, 0, None))
+        insert_crawler_log(SQL_TABLE, (filename, updated_time, len(data), size, response_time, execution_time, 0, None))
