@@ -11,11 +11,11 @@ import sys
 
 load_dotenv()
 
-YOUBIKE_URL = os.getenv('YOUBIKE_URL')
+YOUBIKE_URL = os.getenv('TAIPEI_YOUBIKE_URL')
 S3_BUCKET = os.getenv('BUCKET')
-SQL_TABLE = os.getenv('YOUBIKE_TABLE')
-S3_DIRECTORY_PATH = os.getenv('YOUBIKE_DIRECTORY_PATH')
-FILE_NAME = os.getenv('YOUBIKE_FILE_NAME')
+SQL_TABLE = os.getenv('TAIPEI_YOUBIKE_TABLE')
+S3_DIRECTORY_PATH = os.getenv('TAIPEI_YOUBIKE_DIRECTORY_PATH')
+FILE_NAME = os.getenv('TAIPEI_YOUBIKE_FILE_NAME')
 
 
 def request_data(url):
