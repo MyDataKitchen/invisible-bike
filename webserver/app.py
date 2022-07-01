@@ -29,7 +29,7 @@ st.set_page_config(layout="wide")
 st.sidebar.title("INVISIBLE BIKE EXPLORER")
 st.sidebar.markdown('---')
 
-df = pd.read_parquet("data.parquet", columns=None, use_threads=True)
+
 
 
 # df['datetime'] = pd.to_datetime(df['datetime'])
@@ -42,16 +42,25 @@ df = pd.read_parquet("data.parquet", columns=None, use_threads=True)
 # districts_inPerMinute = df_districts["inPerMinute"].tolist()
 
 
-district = df[['district']].drop_duplicates()['district'].tolist()
-available_stations = len(df['stationId'].drop_duplicates().tolist())
+
 
 city = st.sidebar.selectbox(
   '選取縣市',
   ['台北', '台中'])
 
+if city == '台北':
+    city = 'taipei'
+elif city == '台中':
+    city = 'taichung'
+
 date = st.sidebar.date_input(
           "選取日期",
           datetime.date(2022, 6, 19), min_value=datetime.date(2022, 6, 16), max_value=datetime.date(2022, 6, 29))
+
+df = pd.read_parquet(f"{ city }/{ date }_{ city }.parquet", columns=None, use_threads=True)
+
+district = df[['district']].drop_duplicates()['district'].tolist()
+available_stations = len(df['stationId'].drop_duplicates().tolist())
 
 select_district = st.sidebar.multiselect(
   '選取區域',
@@ -66,6 +75,8 @@ select_info = st.sidebar.selectbox(
     ("可停數量", "可借車輛", "可停空位", "可借用與缺車的對比"))
 
 #
+
+
 
 privious_time = (dt.combine(date.today(), select_time) - datetime.timedelta(minutes=1)).time()
 previous_df = df[df['time'] == str(privious_time)]
@@ -85,10 +96,10 @@ districts_outPerMinute = df_districts["outPerMinute"].tolist()
 districts_inPerMinute = df_districts["inPerMinute"].tolist()
 
 
-
-
 df = df[df['date'] == str(date)]
 df = df[df['time'] == str(select_time)]
+
+stations = df['stationId'].drop_duplicates().tolist()
 
 
 bikes_return = df['inPerMinute'].sum()
@@ -166,14 +177,21 @@ st.markdown("#### 目前暫停服務的借用站")
 st.text(" \n")
 st.text(" \n")
 
+query = "SELECT `YoubikeStation`.stationId, `YoubikeStation`.name, `YoubikeStation`.address, `District`.name FROM `YoubikeStation` INNER JOIN `District` ON `YoubikeStation`.districtId = `District`.id"
+stations_df = pd.read_sql_query(query, engine)
+all_stations = stations_df['stationId'].tolist()
+stop_service_stations_id = list(set(all_stations) - set(stations))
+stop_service_stations = stations_df[stations_df['stationId'].isin(stop_service_stations_id)].values.tolist()
+stop_service_stations.insert(0, ['借用站編號', '借用站名稱', '區域', '地址'])
 
-data_matrix = [['借用站編號', '借用站名稱', '區域', '地址'],
-               ['500108122', '陽光舊宗路口', '內湖區', '陽光街/舊宗路二段'],
-               ['500103044', '大稻埕碼頭', '大同區', '大稻埕疏散門(淡五號水門)外'],
-               ['500103044', '成功路三段83號前', '內湖區', '成功路三段83號前']]
 
-fig = ff.create_table(data_matrix)
-st.plotly_chart(fig, use_container_width=True)
+
+data_matrix = stop_service_stations
+if stop_service_stations_id == []:
+    st.info('目前全部借用站已投入服務')
+else:
+    fig = ff.create_table(data_matrix)
+    st.plotly_chart(fig, use_container_width=True)
 
 st.markdown('---')
 
