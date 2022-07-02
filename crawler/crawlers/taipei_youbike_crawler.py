@@ -1,8 +1,9 @@
-from s3 import put_data_to_s3
+from crawler.model.s3 import put_data_to_s3
 from datetime import datetime as dt
 from datetime import timezone, timedelta
 from dotenv import load_dotenv
-from model import get_latest_log, insert_crawler_log
+from crawler.model.mysql import get_latest_log, insert_crawler_log
+from crawler.model.mongo import insert_youbike_data_to_mongo
 import requests
 import json
 import os
@@ -38,8 +39,8 @@ def insert_data_to_s3(bucket, filename, data):
     status = put_data_to_s3(bucket, filename, json.dumps(data))
     return status
 
-def insert_data_to_mongo():
-    pass
+def insert_data_to_mongo(city, data):
+    return insert_youbike_data_to_mongo(city=city, data=data)
 
 
 if __name__ == '__main__':

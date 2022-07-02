@@ -1,8 +1,8 @@
-from s3 import put_data_to_s3
+from crawler.model.s3 import put_data_to_s3
 from datetime import datetime as dt
 from datetime import timezone, timedelta
 from dotenv import load_dotenv
-from model import insert_crawler_log
+from crawler.model.mysql import insert_crawler_log
 import requests
 import json
 import os

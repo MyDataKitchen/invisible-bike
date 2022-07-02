@@ -12,7 +12,7 @@ def do_precipitation_crawling():
     subprocess.run(["python3", "precipitation_crawler.py"])
 
 def do_wheather_crawling():
-    subprocess.run(["python3", "wheather_crawler.py"])
+    subprocess.run(["python3", "weather_crawler.py"])
 
 if __name__ == '__main__':
 
