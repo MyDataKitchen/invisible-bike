@@ -13,7 +13,7 @@ client = MongoClient(host=MONGO_HOST,
                      password=MONGO_PASSWORD
                     )
 
-db = client['invisible_bike']
+db = client['invisible-bike']
 
 def insert_youbike_data_to_mongo(city, data):
     if city == "taipei":
@@ -33,10 +33,23 @@ def insert_youbike_data_to_mongo(city, data):
     else:
         return False
 
-def insert_weather_data_to_mongo(data):
-    try:
-        db.taipei.insert(data)
-        return True
+def insert_weather_data_to_mongo(source, data):
+    if source == "precipitaion":
+        try:
+            db.precipitaion.insert(data)
+            return True
 
-    except Exception as e:
-        return e
+        except Exception as e:
+            return e
+
+    elif source == "weather":
+        try:
+            db.weather.insert(data)
+            return True
+
+        except Exception as e:
+            return e
+
+    else:
+        return False
+

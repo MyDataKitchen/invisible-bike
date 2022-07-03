@@ -3,16 +3,16 @@ import subprocess
 import time
 
 def do_taipei_youbike_crawling():
-    subprocess.run(["python3", "taipei_youbike_crawler.py"])
+    subprocess.run('python3 taipei_youbike_crawler.py', shell=True, cwd='crawlers')
 
 def do_taichung_youbike_crawling():
-    subprocess.run(["python3", "taichung_youbike_crawler.py"])
+    subprocess.run('python3 taichung_youbike_crawler.py', shell=True, cwd='crawlers')
 
 def do_precipitation_crawling():
-    subprocess.run(["python3", "precipitation_crawler.py"])
+    subprocess.run('python3 precipitation_crawler.py', shell=True, cwd='crawlers')
 
 def do_wheather_crawling():
-    subprocess.run(["python3", "weather_crawler.py"])
+    subprocess.run('python3 wheather_crawler.py', shell=True, cwd='crawlers')
 
 if __name__ == '__main__':
 
