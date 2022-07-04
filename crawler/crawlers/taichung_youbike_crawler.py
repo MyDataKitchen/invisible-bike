@@ -65,7 +65,7 @@ if __name__ == '__main__':
         else:
             filename = f"{date_time}_{FILE_NAME}.json"
             mongo_data = {"created_at": updated_time, "item": data, "filename": filename}
-            print(insert_data_to_mongo("taichung", mongo_data))
+            insert_data_to_mongo("taichung", mongo_data)
             aws_response = insert_data_to_s3(S3_BUCKET, S3_DIRECTORY_PATH + filename, data)
             end = time.time()
             execution_time = end - start
@@ -82,7 +82,6 @@ if __name__ == '__main__':
         aws_response = insert_data_to_s3(S3_BUCKET, S3_DIRECTORY_PATH + filename, data)
         end = time.time()
         execution_time = end - start
-        print(updated_time)
         insert_crawler_log(SQL_TABLE, (filename, updated_time, len(data['retVal']), size, response_time, execution_time, 1, json.dumps(aws_response)))
 
         with open("../temp/temp_data.json", "w") as outfile:

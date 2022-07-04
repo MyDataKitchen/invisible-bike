@@ -60,7 +60,7 @@ if __name__ == '__main__':
     if datetime_request > datetime_log:
         filename = f"{ date_time }_{ FILE_NAME }.json"
         mongo_data = {"created_at": updated_time, "item": data, "filename": filename}
-        insert_data_to_mongo("precipitation ", mongo_data)
+        insert_data_to_mongo("precipitation", mongo_data)
         aws_response = insert_data_to_s3(S3_BUCKET, S3_DIRECTORY_PATH + filename, data)
         end = time.time()
         execution_time = end - start
