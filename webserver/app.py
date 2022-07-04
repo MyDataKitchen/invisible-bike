@@ -43,7 +43,6 @@ st.sidebar.markdown('---')
 
 
 
-
 city = st.sidebar.selectbox(
   '選取縣市',
   ['台北', '台中'])
@@ -55,7 +54,8 @@ elif city == '台中':
 
 date = st.sidebar.date_input(
           "選取日期",
-          datetime.date(2022, 6, 19), min_value=datetime.date(2022, 6, 16), max_value=datetime.date(2022, 6, 29))
+          datetime.date(2022, 6, 28), min_value=datetime.date(2022, 6, 26), max_value=datetime.date(2022, 6, 28))
+
 
 days = {"Sunday":"星期天", "Monday":"星期一", "Tuesday":"星期二", "Wednesday":"星期三", "Thursday":"星期四", "Friday":"星期五", "Saturday":"星期六"}
 day = datetime.datetime.strptime(str(date), '%Y-%m-%d').strftime('%A')
@@ -86,9 +86,14 @@ select_time = col6.slider(
                "選取時間",
                value=time(12, 00), step=datetime.timedelta(minutes=1))
 
+# select_time = col6.select_slider(
+#      '選取時間',
+#      options=pd.to_datetime(df["time"]).dt.strftime('%H:%M:%S').drop_duplicates().values.tolist())
+
+
 select_info = col6.selectbox(
   '選取資料圖層',
-    ("可停數量", "可借車輛", "可停空位", "可借用與缺車的對比"))
+    ("可停數量", "可借車輛", "可停空位"))
 
 col7 = st.columns(1)
 
