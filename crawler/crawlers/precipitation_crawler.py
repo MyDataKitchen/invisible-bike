@@ -1,8 +1,8 @@
-from model.s3 import put_data_to_s3
+from crawler.model.s3 import put_data_to_s3
 from datetime import datetime as dt
 from dotenv import load_dotenv
-from model.mysql import get_latest_log, insert_crawler_log
-from model.mongodb import insert_weather_data_to_mongo
+from crawler.model.mysql import get_latest_log, insert_crawler_log
+from crawler.model.mongodb import insert_weather_data_to_mongo
 from datetime import timezone, timedelta
 import requests
 import json
@@ -60,7 +60,7 @@ if __name__ == '__main__':
     if datetime_request > datetime_log:
         filename = f"{ date_time }_{ FILE_NAME }.json"
         mongo_data = {"created_at": updated_time, "item": data, "filename": filename}
-        insert_data_to_mongo("precipitaion", mongo_data)
+        insert_data_to_mongo("precipitation ", mongo_data)
         aws_response = insert_data_to_s3(S3_BUCKET, S3_DIRECTORY_PATH + filename, data)
         end = time.time()
         execution_time = end - start

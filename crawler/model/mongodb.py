@@ -18,14 +18,16 @@ db = client['invisible-bike']
 def insert_youbike_data_to_mongo(city, data):
     if city == "taipei":
         try:
-            db.taipei.insert(data)
+            collection = db["taipei_temp"]
+            collection.insert_one(data)
             return True
         except Exception as e:
             return e
 
     elif city == "taichung":
         try:
-            db.taichung.insert(data)
+            collection = db["taichung_temp"]
+            collection.insert_one(data)
             return True
         except Exception as e:
             return e
@@ -34,9 +36,10 @@ def insert_youbike_data_to_mongo(city, data):
         return False
 
 def insert_weather_data_to_mongo(source, data):
-    if source == "precipitaion":
+    if source == "precipitation":
         try:
-            db.precipitaion.insert(data)
+            collection = db["precipitation_temp"]
+            collection.insert_one(data)
             return True
 
         except Exception as e:
@@ -44,7 +47,8 @@ def insert_weather_data_to_mongo(source, data):
 
     elif source == "weather":
         try:
-            db.weather.insert(data)
+            collection = db["weather_temp"]
+            collection.insert_one(data)
             return True
 
         except Exception as e:
